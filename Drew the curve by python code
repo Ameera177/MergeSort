@@ -1,0 +1,36 @@
+import matplotlib.pyplot as plt 
+import numpy as np
+# Input sizes 
+input_sizes = [100, 500 , 1000, 2000 , 3000 , 5000, 7500, 10000,15000, 20000, 40000]
+
+# Execution times for best,worst and average cases 
+
+best_times = [0 ,0 ,0 , 0,945, 997,997,1996, 1945, 3998,7972 ]
+worst_times = [0,0,879, 998,967,1878,999, 1943, 2998,4828, 8882]
+average_times = [0,0, 0, 964,1001,998,1031,3002, 5837,6823,13962]
+other time [0,0,987,0,0,998,946, 2592,3955,4989,12016] 
+
+#Calculate the O(n) curve for each case 
+best_curve = [time / n for time, n in zip (best times, input_sizes)]
+worst curve [time / n for time , n in zip ( worst_times, input_sizes)]
+average_curve [time / n for time , n in zip (average_times, input_sizes)]
+mid_curve = [time / n for time,n in zip(other time, input_sizes)]
+
+# Plot the curves
+
+plt.plot(input_sizes, best_curve, label='Best case')
+plt.plot(input_sizes, worst_curve, label='Worst case')
+plt.plot(input_sizes, average_curve, label='Average case')
+plt.plot(input_sizes, mid_curve, label='Mid case')
+
+# Add labels and title
+
+plt.xlabel('Input size (n)')
+plt.ylabel('Execution time (microseconds)')
+plt.title('O(n) curve for Merge Sort')
+
+# Add legend
+plt.legend()
+
+# Show the plot
+plt.show()
