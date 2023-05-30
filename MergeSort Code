@@ -1,0 +1,166 @@
+#include <iostream>
+#include <bits/stdc++.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <chrono>
+#include <random>
+
+using namespace std;
+void merge(int arr[], int l, int m, int r)
+{
+    int i, j, k;
+    int num1 = m - l + 1;
+    int num2 = r - m;
+
+    /* create temp arrays */
+    int L[num1], R[num2];
+
+    /* Copy data to temp arrays L[] and R[] */
+    for (i = 0; i < num1; i++)
+        L[i] = arr[l + i];
+    for (j = 0; j < num2; j++)
+        R[j] = arr[m + 1 + j];
+
+    /* Merge the temp arrays back into arr[l..r]*/
+    i = 0;
+    j = 0;
+    k = l;
+    while (i < num1 && j < num2) {
+        if (L[i] <= R[j]) {
+            arr[k] = L[i];
+            i++;
+        }
+        else {
+            arr[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+
+    /*Copy the remaining elements of L[], if there
+    are any element */
+    while (i < num1) {
+        arr[k] = L[i];
+        i++;
+        k++;
+    }
+
+    /*Copy the remaining elements of R[],if there
+    are any element */
+    while (j < num2) {
+        arr[k] = R[j];
+        j++;
+        k++;
+    }
+}
+
+void mergeSort(int arr[], int l, int r)
+{
+    if (l < r) {
+        int m = l + (r - l) / 2;
+        mergeSort(arr, l, m);
+        mergeSort(arr, m + 1, r);
+
+        merge(arr, l, m, r);
+    }
+}
+
+void printArray(int A[], int size)
+{
+    int i;
+    for (i = 0; i < size; i++)
+        printf("%d ", A[i]);
+    printf("\n");
+}
+
+/*run the merge sort for different input*/
+void runMergeSortAlgorithm(int array_size) {
+
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<> dis(1, array_size);
+
+    int arr[array_size];
+    generate(arr, arr + array_size, [&]() { return dis(gen); });
+    int average_array[array_size];
+    copy(arr, arr + array_size, average_array);
+
+    int other_array[array_size];
+    copy(arr, arr + array_size, other_array);
+
+    /*best case when the input array is sorted */
+    /*step1 sort array*/
+    sort(arr, arr + array_size);
+    cout<<"Best cases: "<<endl;
+    cout<<"input array= ";
+    printArray(arr,array_size);
+    auto start_time = chrono::steady_clock::now();
+    /*step2: execute merge sort function */
+    mergeSort(arr, 0,array_size-1);
+    auto end_time = chrono::steady_clock::now();
+    auto bestCase_time = chrono::duration_cast<chrono::microseconds>(end_time - start_time).count();
+    cout<<"output array= ";
+    printArray(arr,array_size);
+    cout<<endl;
+
+    /*worst case when the input array is descending order*/
+    /*step1: sort array*/
+    sort(arr, arr + array_size, greater<int>());
+    cout<<"Worst cases: "<<endl;
+    cout<<"input array= ";
+    printArray(arr,array_size);
+    start_time = chrono::steady_clock::now();
+    /*step2: execute merge sort function */
+    mergeSort(arr, 0, array_size-1);
+    end_time = chrono::steady_clock::now();
+    cout<<"output array= ";
+    printArray(arr,array_size);
+    auto worstCase_time = chrono::duration_cast<chrono::microseconds>(end_time - start_time).count();
+    cout<<endl;
+
+    /*average case when the input array unordered */
+    cout<<"Average cases: "<<endl;
+    cout<<"input array= ";
+    printArray(average_array,array_size);
+    start_time = chrono::steady_clock::now();
+    mergeSort(average_array, 0, array_size-1);
+    end_time = chrono::steady_clock::now();
+    cout<<"output array= ";
+    printArray(average_array,array_size);
+    auto averageCase_time = chrono::duration_cast<chrono::microseconds>(end_time - start_time).count();
+
+    cout<<endl;
+    /* other cases between best and worst*/
+    int mid = array_size / 2;
+    sort(other_array, other_array + mid, greater<int>());
+    cout<<"other cases: "<<endl;
+    cout<<"input array= ";
+    printArray(other_array,array_size);
+    start_time = chrono::steady_clock::now();
+    mergeSort(other_array, 0, array_size-1);
+    end_time = chrono::steady_clock::now();
+    cout<<"output array= ";
+    printArray(other_array,array_size);
+    auto mid_time = chrono::duration_cast<chrono::microseconds>(end_time - start_time).count();
+
+    cout<<endl;
+    cout << "Input size: " << array_size << endl;
+    cout << "Best case: " << bestCase_time << " microseconds" << endl;
+    cout << "Worst case: " << worstCase_time << " microseconds" << endl;
+    cout << "Average case: " << averageCase_time << " microseconds" << endl;
+    cout << "Other case: " << mid_time << " microseconds" << endl;
+}
+
+
+int main()
+{
+    int array_size=100;
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<> dis(1, array_size);
+
+    runMergeSortAlgorithm(array_size);
+    return 0;
+}
+
+
